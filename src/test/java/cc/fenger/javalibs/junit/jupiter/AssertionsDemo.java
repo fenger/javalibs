@@ -7,6 +7,8 @@ import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+
 public class AssertionsDemo {
 
     private Person p = null;
@@ -54,6 +56,53 @@ public class AssertionsDemo {
                 });
     }
 
+    @Test
+    void exceptionTesting() {
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+            throw new IllegalArgumentException("a message");
+        });
+        assertEquals("a message", exception.getMessage());
+    }
+
+    @Test
+    void timeoutNotExceeded() {
+        assertTimeout(Duration.ofSeconds(2), () -> {
+            Thread.sleep(1000);
+        });
+    }
+
+    @Test
+    void timeoutExceeded() {
+        assertTimeout(Duration.ofSeconds(3), () -> {
+            Thread.sleep(5000);
+        });
+    }
+
+    @Test
+    void timeoutNotExceededWithResult() {
+        String actualResult = assertTimeout(Duration.ofSeconds(3), () -> {
+            return "a result";
+        });
+
+        assertEquals("a result", actualResult);
+    }
+
+    @Test
+    void timeoutNotExceededWithMethod() {
+        String actualGreeting = assertTimeout(Duration.ofSeconds(3), AssertionsDemo::greeting);
+        assertEquals("hello world", actualGreeting);
+    }
+
+    @Test
+    void timeoutExceededWithPreemptiveTermination() {
+        assertTimeoutPreemptively(Duration.ofSeconds(3000), () -> {
+            Thread.sleep(1000);
+        });
+    }
+
+    private static String greeting() {
+        return "hello world";
+    }
 }
 
 
