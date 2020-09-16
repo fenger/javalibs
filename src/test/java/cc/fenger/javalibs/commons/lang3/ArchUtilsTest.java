@@ -1,4 +1,4 @@
-package cc.fenger.javalibs.commons_lang3;
+package cc.fenger.javalibs.commons.lang3;
 
 import org.apache.commons.lang3.ArchUtils;
 import org.apache.commons.lang3.arch.Processor;
